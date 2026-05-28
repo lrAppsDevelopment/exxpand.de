@@ -261,7 +261,7 @@ function Hero() {
                 className={`trust-logo h-7 lg:h-8 w-auto object-contain object-center shrink-0 ${
                   logo.name === 'Würth' ? 'max-w-[100px] lg:max-w-[110px]' :
                   logo.name === 'PLANSEE' ? 'max-w-[92px] lg:max-w-[100px]' :
-                  logo.name === 'Christ Electronic Systems' ? 'max-w-[96px] lg:max-w-[104px]' :
+                  logo.name === 'Christ Electronic Systems' ? 'max-w-[88px] lg:max-w-[96px]' :
                   'max-w-[68px] lg:max-w-[76px]'
                 }`}
               />
