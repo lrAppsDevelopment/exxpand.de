@@ -1,25 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import {
   ArrowRight, Zap, TrendingUp, Users, Star,
-  Calendar, CheckCircle, Menu, X
+  Calendar, CheckCircle
 } from 'lucide-react'
+import CtaLink from './components/CtaLink'
+import Navbar from './components/Navbar'
+import { T, CTA_URL, CTA_LABEL } from './theme'
 
 gsap.registerPlugin(ScrollTrigger)
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   DESIGN TOKENS — Midnight Luxe
-───────────────────────────────────────────────────────────────────────────── */
-const T = {
-  obsidian:  '#0D0D12',
-  champagne: '#C9A84C',
-  ivory:     '#FAF8F5',
-  slate:     '#2A2A35',
-}
-
-const CTA_URL = 'https://cal.eu/exxpand/potenzialanalyse'
-const CTA_LABEL = 'Kostenlose Potenzialanalyse'
 
 const CLIENT_LOGOS = [
   { name: 'Würth', src: '/logos/wuerth.svg' },
@@ -32,124 +23,6 @@ const CLIENT_LOGOS = [
   { name: 'acal bfi', src: '/logos/acal-bfi.svg' },
   { name: 'Spang Engineered Solutions', src: '/logos/spang.svg' },
 ]
-
-function CtaLink({
-  className = '',
-  style = {},
-  iconSize = 14,
-  children = CTA_LABEL,
-  bgHover = '#e8c06e',
-  btnBgClassName = 'rounded-full',
-  onClick,
-}) {
-  return (
-    <a
-      href={CTA_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-      onClick={onClick}
-      className={`btn-magnetic inline-flex items-center gap-2 ${className}`}
-      style={style}
-    >
-      <span className={`btn-bg ${btnBgClassName}`} style={{ backgroundColor: bgHover }} />
-      <span className="relative z-10">{children}</span>
-      <ArrowRight size={iconSize} className="relative z-10 shrink-0" />
-    </a>
-  )
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   NAVBAR
-───────────────────────────────────────────────────────────────────────────── */
-function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const navRef = useRef(null)
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
-  const links = [
-    { label: 'Leistungen', href: '#features' },
-    { label: 'Philosophie', href: '#philosophy' },
-    { label: 'Prozess', href: '#protocol' },
-    { label: 'Referenzen', href: '#testimonials' },
-  ]
-
-  const scrollTo = (href) => {
-    setMenuOpen(false)
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
-  }
-
-  return (
-    <>
-      <nav
-        ref={navRef}
-        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 rounded-full px-6 md:px-8 py-3 flex items-center gap-6 md:gap-8 w-max max-w-[96vw] ${
-          scrolled
-            ? 'bg-[#0D0D12]/70 backdrop-blur-xl border border-[#2A2A35] shadow-2xl'
-            : 'bg-transparent'
-        }`}
-      >
-        <a href="#" className="font-black tracking-tighter text-ivory text-lg select-none shrink-0">
-          EXX<span style={{ color: T.champagne }}>PAND</span>
-        </a>
-
-        <div className="hidden md:flex items-center gap-6 shrink-0">
-          {links.map(l => (
-            <button
-              key={l.label}
-              onClick={() => scrollTo(l.href)}
-              className="link-lift text-sm font-medium text-ivory/70 hover:text-ivory transition-colors"
-            >
-              {l.label}
-            </button>
-          ))}
-        </div>
-
-        <CtaLink
-          className="hidden md:flex text-sm font-semibold px-5 py-2.5 rounded-full whitespace-nowrap shrink-0"
-          style={{ backgroundColor: T.champagne, color: T.obsidian }}
-        />
-
-        <button
-          className="md:hidden text-ivory/80 hover:text-ivory"
-          onClick={() => setMenuOpen(v => !v)}
-        >
-          {menuOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
-      </nav>
-
-      {/* Mobile menu */}
-      {menuOpen && (
-        <div
-          className="fixed inset-0 z-40 flex flex-col justify-center items-center gap-8"
-          style={{ background: T.obsidian + 'F2' }}
-        >
-          {links.map(l => (
-            <button
-              key={l.label}
-              onClick={() => scrollTo(l.href)}
-              className="text-2xl font-semibold text-ivory hover:text-champagne transition-colors"
-              style={{ '--tw-text-opacity': 1 }}
-            >
-              {l.label}
-            </button>
-          ))}
-          <CtaLink
-            className="text-base font-semibold px-8 py-4 rounded-full mt-4"
-            style={{ backgroundColor: T.champagne, color: T.obsidian }}
-            iconSize={18}
-            onClick={() => setMenuOpen(false)}
-          />
-        </div>
-      )}
-    </>
-  )
-}
 
 /* ─────────────────────────────────────────────────────────────────────────────
    HERO
@@ -190,7 +63,7 @@ function Hero() {
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1920&q=80')`,
+          backgroundImage: `url('/bergsteiger2.jpg')`,
         }}
       />
       {/* Gradient overlay */}
@@ -234,7 +107,8 @@ function Hero() {
             ref={subRef}
             className="text-lg md:text-xl text-ivory/70 max-w-xl leading-relaxed mb-10"
           >
-            Mit dem EXXPAND Masterplan erreichen Sie in 6 Monaten mehr als Ihre Wettbewerber in 5 Jahren.
+            Mit EXXPAND erreichen Sie in 6 Monaten mehr als Ihre Wettbewerber in 5 Jahren.
+            <br />
             Persönlich. Messbar. Unaufhaltsam.
           </p>
 
@@ -247,10 +121,7 @@ function Hero() {
           </div>
         </div>
 
-        <div
-          className="hidden md:block w-full border-t mt-16 lg:mt-20 mb-16 lg:mb-20 py-6 lg:py-7"
-          style={{ borderColor: `${T.slate}80`, background: `${T.obsidian}E6` }}
-        >
+        <div className="hidden md:block w-full mt-16 lg:mt-20 mb-16 lg:mb-20 py-6 lg:py-7">
           <div className="flex w-full min-w-0 flex-nowrap items-center justify-between gap-x-2 lg:gap-x-3">
             {CLIENT_LOGOS.map((logo) => (
               <img
@@ -258,11 +129,11 @@ function Hero() {
                 src={logo.src}
                 alt={logo.name}
                 title={logo.name}
-                className={`trust-logo h-7 lg:h-8 w-auto object-contain object-center shrink-0 ${
-                  logo.name === 'Würth' ? 'max-w-[100px] lg:max-w-[110px]' :
-                  logo.name === 'PLANSEE' ? 'max-w-[92px] lg:max-w-[100px]' :
-                  logo.name === 'Christ Electronic Systems' ? 'max-w-[88px] lg:max-w-[96px]' :
-                  'max-w-[68px] lg:max-w-[76px]'
+                className={`trust-logo h-[42px] lg:h-12 w-auto object-contain object-center shrink-0 ${
+                  logo.name === 'Würth' ? 'max-w-[150px] lg:max-w-[165px]' :
+                  logo.name === 'PLANSEE' ? 'max-w-[138px] lg:max-w-[150px]' :
+                  logo.name === 'Christ Electronic Systems' ? 'max-w-[132px] lg:max-w-[144px]' :
+                  'max-w-[102px] lg:max-w-[114px]'
                 }`}
               />
             ))}
@@ -274,13 +145,13 @@ function Hero() {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   FEATURE CARD 1 — Diagnostic Shuffler (Umsetzungsgeschwindigkeit)
+   FEATURE CARD 1 — Diagnostic Shuffler (Masterplan & Umsetzung)
 ───────────────────────────────────────────────────────────────────────────── */
 function ShufflerCard() {
   const items = [
-    { label: 'Ziel definiert', sub: 'Glasklare Vision & KPIs' },
-    { label: 'Engpässe gelöst', sub: 'Hindernisse eliminiert' },
-    { label: 'Gipfel erreicht', sub: 'Messbare Ergebnisse' },
+    { label: 'Vision & Mission klar', sub: 'Glasklares Leitbild definiert' },
+    { label: 'Engpässe aufgelöst', sub: 'Hindernisse systematisch eliminiert' },
+    { label: 'Gipfel erreicht', sub: '6 Monate statt 5 Jahre' },
   ]
   const [stack, setStack] = useState(items)
 
@@ -299,11 +170,11 @@ function ShufflerCard() {
     <div className="rounded-4xl p-8 flex flex-col gap-6 border h-full"
       style={{ background: T.ivory, borderColor: `${T.slate}30` }}>
       <div className="flex items-center justify-between">
-        <span className="font-sans font-bold text-lg" style={{ color: T.obsidian }}>Umsetzungsgeschwindigkeit</span>
+        <span className="font-sans font-bold text-lg" style={{ color: T.obsidian }}>Masterplan & Umsetzung</span>
         <Zap size={18} style={{ color: T.champagne }} />
       </div>
       <p className="text-sm" style={{ color: `${T.slate}99` }}>
-        In 6 Monaten weiter als Wettbewerber in 5 Jahren.
+        Konkrete Anleitung zur aktiven Ziel-Umsetzung — für Sie, Ihr Unternehmen und Ihr Team.
       </p>
       <div className="relative h-44 flex flex-col justify-end gap-2">
         {stack.map((item, i) => (
@@ -335,16 +206,16 @@ function ShufflerCard() {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   FEATURE CARD 2 — Telemetry Typewriter (Umsatzwachstum)
+   FEATURE CARD 2 — Telemetry Typewriter (Umsatz & Wachstum)
 ───────────────────────────────────────────────────────────────────────────── */
 function TypewriterCard() {
   const messages = [
-    '> Umsatz +38% in 12 Monaten',
-    '> Rohertrag +14% optimiert',
-    '> Neukunden-Pipeline ×3',
+    '> Umsatz +25–40 % in 12 Monaten',
+    '> Rohertrag um 10–15 % gehoben',
     '> High Probability Selling aktiv',
-    '> KPI-Dashboard live',
-    '> Ziel: Marktführerschaft',
+    '> Positionierung als Marktführer',
+    '> 100 % tägliche Zielkontrolle',
+    '> Produktportfolio optimiert',
   ]
   const [displayed, setDisplayed] = useState('')
   const [msgIdx, setMsgIdx] = useState(0)
@@ -372,11 +243,11 @@ function TypewriterCard() {
     <div className="rounded-4xl p-8 flex flex-col gap-6 border h-full"
       style={{ background: T.obsidian, borderColor: `${T.slate}` }}>
       <div className="flex items-center justify-between">
-        <span className="font-sans font-bold text-lg" style={{ color: T.ivory }}>Umsatzwachstum</span>
+        <span className="font-sans font-bold text-lg" style={{ color: T.ivory }}>Umsatz & Wachstum</span>
         <TrendingUp size={18} style={{ color: T.champagne }} />
       </div>
       <p className="text-sm" style={{ color: `${T.ivory}60` }}>
-        Steigern Sie Ihren Umsatz um 25–40 % in 12 Monaten.
+        Umsatz +25–40 % · Rohertrag +10–15 % · High Performance Vertrieb — in 12 Monaten.
       </p>
       <div className="flex items-center gap-2 mb-2">
         <div className="w-2 h-2 rounded-full pulse-dot" style={{ background: '#4ade80' }} />
@@ -396,7 +267,7 @@ function TypewriterCard() {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   FEATURE CARD 3 — Scheduler (High Performance Team)
+   FEATURE CARD 3 — Scheduler (Potenzial & Teamkultur)
 ───────────────────────────────────────────────────────────────────────────── */
 function SchedulerCard() {
   const days = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
@@ -417,16 +288,16 @@ function SchedulerCard() {
     <div className="rounded-4xl p-8 flex flex-col gap-6 border h-full"
       style={{ background: T.ivory, borderColor: `${T.slate}30` }}>
       <div className="flex items-center justify-between">
-        <span className="font-sans font-bold text-lg" style={{ color: T.obsidian }}>High Performance Team</span>
+        <span className="font-sans font-bold text-lg" style={{ color: T.obsidian }}>Potenzial & Teamkultur</span>
         <Users size={18} style={{ color: T.champagne }} />
       </div>
       <p className="text-sm" style={{ color: `${T.slate}99` }}>
-        Mitarbeiterbindung durch klare Zielfokussierung &amp; Teamkultur.
+        Einzigartige Unternehmenskultur aufbauen. Mitarbeiter binden. Volles Potenzial entfalten.
       </p>
       <div className="rounded-2xl p-5 border" style={{ background: T.obsidian, borderColor: `${T.slate}` }}>
         <div className="flex items-center gap-1.5 mb-4">
           <Calendar size={14} style={{ color: T.champagne }} />
-          <span className="font-mono text-xs" style={{ color: `${T.ivory}60` }}>TEAM SPRINT — KW 22</span>
+          <span className="font-mono text-xs" style={{ color: `${T.ivory}60` }}>EXXPAND PERFORMANCE TRACKER</span>
         </div>
         <div className="grid grid-cols-7 gap-1.5">
           {days.map((d, i) => (
@@ -452,7 +323,7 @@ function SchedulerCard() {
           className="mt-4 rounded-lg px-4 py-2 text-center font-mono text-xs transition-all duration-300"
           style={{ background: `${T.champagne}25`, color: T.champagne, border: `1px solid ${T.champagne}40` }}
         >
-          Ziele gesetzt · Performance aktiviert
+          Potenzial voll ausgeschöpft · Gipfel erreicht
         </div>
       </div>
     </div>
@@ -536,7 +407,7 @@ function Philosophy() {
       <div
         className="absolute inset-0 bg-cover bg-center opacity-10"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1618220179428-22790b461013?w=1920&q=80')`,
+          backgroundImage: `url('/stephan_anzug.jpg')`,
         }}
       />
       <div ref={textRef} className="relative z-10 max-w-5xl mx-auto">
@@ -544,7 +415,7 @@ function Philosophy() {
           Unsere Philosophie
         </p>
         <p className="text-base md:text-lg text-ivory/50 mb-8 leading-relaxed">
-          {['Die', 'meisten', 'Berater', 'fokussieren', 'auf:'].map((w, i) => (
+          {['Die', 'meisten', 'Berater', 'fokussieren', 'sich', 'auf:'].map((w, i) => (
             <span key={i} className="word-reveal inline-block mr-2">{w}</span>
           ))}
           <br />
@@ -553,13 +424,13 @@ function Philosophy() {
           ))}
         </p>
         <p className="text-2xl md:text-3xl font-semibold text-ivory/70 mb-6">
-          {['Wir', 'fokussieren', 'auf:'].map((w, i) => (
+          {['Wir', 'fokussieren', 'uns', 'auf:'].map((w, i) => (
             <span key={i} className="word-reveal inline-block mr-3">{w}</span>
           ))}
         </p>
-        <div className="overflow-hidden">
+        <div className="overflow-hidden pb-3">
           <p
-            className="word-reveal font-serif italic font-black leading-none"
+            className="word-reveal font-serif italic font-black leading-[1.12]"
             style={{
               fontSize: 'clamp(3rem, 9vw, 8rem)',
               color: T.champagne,
@@ -587,103 +458,26 @@ function Philosophy() {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   PROTOCOL — Sticky Stacking Archive
+   E-BOOK
 ───────────────────────────────────────────────────────────────────────────── */
-function GeoAnimation() {
-  return (
-    <svg width="200" height="200" viewBox="0 0 200 200" className="opacity-40">
-      <circle cx="100" cy="100" r="70" fill="none" stroke="#C9A84C" strokeWidth="1.5" className="rotate-geo" style={{ transformOrigin: '100px 100px' }} />
-      <circle cx="100" cy="100" r="50" fill="none" stroke="#C9A84C" strokeWidth="1" className="rotate-geo-rev" style={{ transformOrigin: '100px 100px' }} />
-      <circle cx="100" cy="100" r="30" fill="none" stroke="#C9A84C" strokeWidth="0.5" className="rotate-geo" style={{ transformOrigin: '100px 100px' }} />
-      {[0, 60, 120, 180, 240, 300].map((deg) => (
-        <line
-          key={deg}
-          x1="100" y1="100"
-          x2={100 + 70 * Math.cos((deg * Math.PI) / 180)}
-          y2={100 + 70 * Math.sin((deg * Math.PI) / 180)}
-          stroke="#C9A84C" strokeWidth="0.5" opacity="0.4"
-          className="rotate-geo"
-          style={{ transformOrigin: '100px 100px' }}
-        />
-      ))}
-    </svg>
-  )
-}
-
-function ScanAnimation() {
-  return (
-    <div className="relative w-48 h-48 overflow-hidden opacity-40">
-      <div className="grid grid-cols-8 grid-rows-8 gap-1 w-full h-full">
-        {Array.from({ length: 64 }).map((_, i) => (
-          <div key={i} className="rounded-sm" style={{ background: `${T.champagne}30` }} />
-        ))}
-      </div>
-      <div
-        className="scan-line absolute top-0 bottom-0 w-6 rounded"
-        style={{
-          background: `linear-gradient(to right, transparent, ${T.champagne}80, transparent)`,
-          left: 0,
-        }}
-      />
-    </div>
-  )
-}
-
-function WaveAnimation() {
-  return (
-    <svg width="220" height="80" viewBox="0 0 220 80" className="opacity-60">
-      <path
-        d="M 0 40 Q 20 10 40 40 T 80 40 T 120 40 T 160 40 T 200 40 T 220 40"
-        fill="none"
-        stroke="#C9A84C"
-        strokeWidth="2"
-        className="wave-dash"
-      />
-    </svg>
-  )
-}
-
-const protocolSteps = [
-  {
-    step: '01',
-    title: 'EXXPAND Masterplan',
-    desc: 'Mit Vollgas in 6 Monaten weiter als Wettbewerber in 5 Jahren. Klare Ziele, konkrete Umsetzung, messbare Ergebnisse.',
-    anim: <GeoAnimation />,
-    bg: T.obsidian,
-  },
-  {
-    step: '02',
-    title: 'EXXPAND Sales',
-    desc: 'Machen Sie in 12 Monaten aus Ihrer Innovation eine hochprofitable Marke. High Performance Vertrieb. Positionierung. Umsatz.',
-    anim: <ScanAnimation />,
-    bg: T.slate,
-  },
-  {
-    step: '03',
-    title: 'EXXPAND Strategy',
-    desc: 'In 24 Monaten zum Nischen-Marktführer. Machen Sie Ihr Unternehmen fit für die Zukunft — zukunftssicher, krisenfest, wachstumsstark.',
-    anim: <WaveAnimation />,
-    bg: '#1a1a24',
-  },
+const ebookArticles = [
+  'Großkundengewinnung mit Erfolgsgarantie',
+  'Kaum jemand mag es, jeder tut es täglich: Verhandeln. Was jeder über Verhandeln wissen sollte.',
+  'High Probability Selling: Die neue bahnbrechende Verkaufsmethode, die Sie garantiert überraschen wird.',
+  'Spitzenumsätze im Handumdrehen',
 ]
 
-function Protocol() {
+function Ebook() {
   const ref = useRef(null)
+  const [email, setEmail] = useState('')
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo('.protocol-header',
-        { y: 30, opacity: 0 },
+      gsap.fromTo('.ebook-reveal',
+        { y: 40, opacity: 0 },
         {
-          y: 0, opacity: 1, duration: 0.8, ease: 'power3.out',
+          y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out',
           scrollTrigger: { trigger: ref.current, start: 'top 75%' },
-        }
-      )
-      gsap.fromTo('.protocol-card',
-        { y: 60, opacity: 0 },
-        {
-          y: 0, opacity: 1, duration: 0.9, stagger: 0.2, ease: 'power3.out',
-          scrollTrigger: { trigger: ref.current, start: 'top 70%' },
         }
       )
     }, ref)
@@ -691,36 +485,71 @@ function Protocol() {
   }, [])
 
   return (
-    <section id="protocol" ref={ref} className="py-28 px-6 md:px-16 lg:px-24" style={{ background: '#0A0A0F' }}>
-      <div className="protocol-header max-w-2xl mb-16">
-        <p className="font-mono text-xs tracking-[0.3em] uppercase mb-4" style={{ color: T.champagne }}>
-          Die Programme
-        </p>
-        <h2 className="font-sans font-black text-4xl md:text-5xl leading-tight text-ivory">
-          Ihr Weg.<br />
-          <span className="font-serif italic" style={{ color: T.champagne }}>Drei Stufen.</span>
-        </h2>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {protocolSteps.map((s) => (
-          <div
-            key={s.step}
-            className="protocol-card rounded-4xl p-8 border flex flex-col gap-8 min-h-[360px] relative overflow-hidden group transition-all duration-500 hover:scale-[1.02]"
-            style={{ background: s.bg, borderColor: `${T.slate}60` }}
-          >
-            <div className="absolute bottom-6 right-6 opacity-30 group-hover:opacity-50 transition-opacity pointer-events-none">
-              {s.anim}
-            </div>
-            <div>
-              <span className="font-mono text-sm" style={{ color: T.champagne }}>{s.step}</span>
-            </div>
-            <div className="mt-auto">
-              <h3 className="font-sans font-black text-2xl md:text-3xl text-ivory mb-4">{s.title}</h3>
-              <p className="text-ivory/60 text-sm leading-relaxed">{s.desc}</p>
-            </div>
+    <section id="ebook" ref={ref} className="py-28 px-6 md:px-16 lg:px-24" style={{ background: '#0A0A0F' }}>
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="ebook-reveal flex justify-center lg:justify-start">
+          <img
+            src="/ebook.png"
+            alt="EXXPAND Gratis-E-Book"
+            className="w-full max-w-sm md:max-w-md rounded-4xl shadow-2xl object-cover"
+          />
+        </div>
+        <div className="ebook-reveal flex flex-col gap-8">
+          <div>
+            <p className="font-mono text-xs tracking-[0.3em] uppercase mb-4" style={{ color: T.champagne }}>
+              Gratis-E-Book
+            </p>
+            <h2 className="font-sans font-black text-4xl md:text-5xl leading-tight text-ivory">
+              Über 40 Seiten<br />
+              <span className="font-serif italic" style={{ color: T.champagne }}>exklusive Inhalte.</span>
+            </h2>
           </div>
-        ))}
+          <ul className="flex flex-col gap-4">
+            {ebookArticles.map((article) => (
+              <li key={article} className="ebook-reveal flex items-start gap-3">
+                <CheckCircle
+                  size={18}
+                  className="mt-0.5 shrink-0"
+                  style={{ color: T.champagne }}
+                />
+                <span className="text-sm md:text-base text-ivory/80 leading-relaxed">{article}</span>
+              </li>
+            ))}
+            <li className="ebook-reveal flex items-start gap-3">
+              <CheckCircle
+                size={18}
+                className="mt-0.5 shrink-0"
+                style={{ color: T.champagne }}
+              />
+              <span className="text-sm md:text-base text-ivory/60 leading-relaxed italic">
+                … und 6 weitere Artikel.
+              </span>
+            </li>
+          </ul>
+          <form
+            className="ebook-reveal flex flex-col sm:flex-row gap-3"
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <input
+              type="email"
+              name="email"
+              placeholder="Ihre E-Mail-Adresse"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="flex-1 min-w-0 px-5 py-3.5 rounded-2xl border text-sm text-ivory placeholder:text-ivory/40 focus:outline-none focus:ring-2 focus:ring-champagne/40 transition-shadow"
+              style={{
+                background: `${T.obsidian}99`,
+                borderColor: 'rgba(250, 248, 245, 0.35)',
+              }}
+            />
+            <button
+              type="submit"
+              className="btn-magnetic btn-secondary shrink-0 px-8 py-3.5 rounded-2xl font-semibold text-sm whitespace-nowrap"
+            >
+              Anfordern
+            </button>
+          </form>
+        </div>
       </div>
     </section>
   )
@@ -775,7 +604,11 @@ function Testimonials() {
               borderColor: `${T.slate}80`,
             }}
           >
-            <Star size={20} style={{ color: T.champagne }} />
+            <div className="flex gap-1" aria-label="5 von 5 Sternen">
+              {Array.from({ length: 5 }).map((_, starIndex) => (
+                <Star key={starIndex} size={20} style={{ color: T.champagne }} />
+              ))}
+            </div>
             <p className="text-ivory/80 text-sm leading-relaxed italic flex-1">&ldquo;{t.quote}&rdquo;</p>
             <div>
               <p className="font-semibold text-sm text-ivory">{t.name}</p>
@@ -783,6 +616,15 @@ function Testimonials() {
             </div>
           </div>
         ))}
+      </div>
+      <div className="mt-12 flex justify-center">
+        <Link
+          to="/erfolgsgeschichten"
+          className="btn-magnetic btn-secondary inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-semibold text-sm"
+        >
+          Alle Erfolgsgeschichten
+          <ArrowRight size={16} />
+        </Link>
       </div>
     </section>
   )
@@ -825,7 +667,7 @@ function Team() {
   const TeamCard = ({ member }) => (
     <div
       className="team-card rounded-4xl overflow-hidden border group w-full"
-      style={{ borderColor: `${T.slate}60` }}
+      style={{ borderColor: `${T.slate}80` }}
     >
       <div className="relative overflow-hidden flex justify-center" style={{ background: T.obsidian }}>
         <img
@@ -835,10 +677,10 @@ function Team() {
         />
         <div
           className="absolute inset-x-0 bottom-0 h-24 pointer-events-none"
-          style={{ background: `linear-gradient(to top, ${T.slate} 0%, transparent 100%)` }}
+          style={{ background: 'linear-gradient(to top, #000000 0%, transparent 100%)' }}
         />
       </div>
-      <div className="p-6 md:p-8" style={{ background: T.slate }}>
+      <div className="p-6 md:p-8" style={{ background: '#000000' }}>
         <h3 className="font-sans font-black text-xl md:text-2xl text-ivory mb-3">{member.name}</h3>
         <div className="flex flex-wrap gap-2 mb-4 justify-center md:justify-start">
           {member.roles.map(r => (
@@ -857,7 +699,7 @@ function Team() {
   )
 
   return (
-    <section ref={ref} className="py-28" style={{ background: '#0A0A0F' }}>
+    <section ref={ref} className="py-28" style={{ background: `${T.slate}60` }}>
       <div className="max-w-2xl mb-16 mx-auto text-center px-6 md:px-16 lg:px-24">
         <p className="font-mono text-xs tracking-[0.3em] uppercase mb-4" style={{ color: T.champagne }}>
           Die Gipfelstürmer
@@ -900,11 +742,10 @@ const programs = [
     duration: '6 Monate',
     highlight: 'In 6 Monaten mehr als Ihre Wettbewerber in 5 Jahren.',
     features: [
-      'Persönliches Strategie-Coaching',
-      'Zieldefinition & KPI-System',
-      'Engpass-Analyse & Lösung',
-      'Monatliche 1:1 Sessions',
-      'EXXPAND Masterplan Framework',
+      'Allgemein-Nutzen: Maximale Potenzialentfaltung durch ganzheitliches Erfolgs-Coaching & strategische Positionierung',
+      'Mindset: Mentale Exzellenz – Gewinner-Mentalität durch Auflösen von Ängsten & Engpässen',
+      'Persönlichkeitsentwicklung: Visionskraft mit Umsetzungsgarantie – klares Leitbild mit verbindlichem Pfad',
+      'Positionierung: Radikaler Fokus auf das Wesentliche – 5-Stufen-System mit täglicher Zielkontrolle',
     ],
     featured: false,
   },
@@ -914,12 +755,11 @@ const programs = [
     duration: '12 Monate',
     highlight: 'Umsatz um 25–40 % steigern. Innovation zur profitablen Marke.',
     features: [
-      'High Performance Vertriebsteam',
-      'Positionierung & Markenaufbau',
-      'High Probability Selling',
-      'Sales-Prozess Optimierung',
-      'Wöchentliche Team-Sessions',
-      'Rohertrag +10–15 %',
+      'Allgemein-Nutzen: Maximale Potenzialentfaltung durch ganzheitliches Erfolgs-Coaching & strategische Positionierung',
+      'Mindset: Mentale Exzellenz – Gewinner-Mentalität durch Auflösen von Ängsten & Engpässen',
+      'Persönlichkeitsentwicklung: Visionskraft mit Umsetzungsgarantie – klares Leitbild mit verbindlichem Pfad',
+      'Positionierung: Radikaler Fokus auf das Wesentliche – 5-Stufen-System mit täglicher Zielkontrolle',
+      'Wachsen wie Würth: Skalierung & Markenaufbau in 12 Monaten durch Konzern-Prinzipien & Vertriebsstrukturen',
     ],
     featured: true,
   },
@@ -929,12 +769,12 @@ const programs = [
     duration: '24 Monate',
     highlight: 'Zum Nischen-Marktführer. Fit für die Zukunft.',
     features: [
-      'Marktführerschafts-Strategie',
-      'Unternehmenskultur aufbauen',
-      'Mitarbeiterbindung & Führung',
-      'Zukunftssichere Positionierung',
-      'Executive Mentoring',
-      'Krisenresistenz & Skalierung',
+      'Allgemein-Nutzen: Maximale Potenzialentfaltung durch ganzheitliches Erfolgs-Coaching & strategische Positionierung',
+      'Mindset: Mentale Exzellenz – Gewinner-Mentalität durch Auflösen von Ängsten & Engpässen',
+      'Persönlichkeitsentwicklung: Visionskraft mit Umsetzungsgarantie – klares Leitbild mit verbindlichem Pfad',
+      'Positionierung: Radikaler Fokus auf das Wesentliche – 5-Stufen-System mit täglicher Zielkontrolle',
+      'Wachsen wie Würth: Skalierung & Markenaufbau in 12 Monaten durch Konzern-Prinzipien & Vertriebsstrukturen',
+      'Lizenzmodelle & Nachfolge: Nischenmarktführerschaft & passive Einkommensströme in 12 Monaten',
     ],
     featured: false,
   },
@@ -967,14 +807,14 @@ function Programs() {
           <span className="font-serif italic" style={{ color: T.champagne }}>EXXPAND-Plan.</span>
         </h2>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:items-stretch">
         {programs.map((p) => (
           <div
             key={p.name}
-            className={`program-card rounded-4xl p-8 border flex flex-col gap-6 transition-all duration-300 ${p.featured ? 'scale-[1.03] shadow-2xl' : ''}`}
+            className="program-card h-full rounded-4xl p-8 border flex flex-col gap-6 transition-all duration-300"
             style={{
               background: p.featured ? T.champagne : T.slate,
-              borderColor: p.featured ? T.champagne : `${T.slate}80`,
+              borderColor: p.featured ? 'transparent' : `${T.slate}80`,
             }}
           >
             <div>
@@ -1021,13 +861,13 @@ function Programs() {
               ))}
             </ul>
             <CtaLink
-              className="mt-2 w-full py-3.5 rounded-2xl font-semibold text-sm justify-center"
+              className="mt-auto w-full py-3.5 rounded-2xl font-semibold text-sm justify-center shrink-0"
               style={{
                 background: p.featured ? T.obsidian : T.champagne,
                 color: p.featured ? T.ivory : T.obsidian,
               }}
               btnBgClassName="rounded-2xl"
-              bgHover={p.featured ? T.slate : '#e8c06e'}
+              bgHover={p.featured ? T.slate : '#9d8a65'}
               iconSize={14}
             >
               Jetzt starten
@@ -1069,12 +909,8 @@ function Footer() {
             EXX<span style={{ color: T.champagne }}>PAND</span>
           </p>
           <p className="text-ivory/50 text-sm leading-relaxed max-w-xs">
-            Top Performance Akademie für Unternehmer und Führungskräfte. Mit einem EXX-fachen schneller nach oben.
+            Top Performance Akademie für Unternehmer und Führungskräfte. EXX-fach schneller nach oben.
           </p>
-          <div className="flex items-center gap-2 mt-6">
-            <div className="w-2 h-2 rounded-full pulse-dot" style={{ background: '#4ade80' }} />
-            <span className="font-mono text-xs" style={{ color: '#4ade80' }}>SYSTEM OPERATIONAL</span>
-          </div>
         </div>
         {navGroups.map(g => (
           <div key={g.heading}>
@@ -1123,7 +959,7 @@ export default function App() {
       <Hero />
       <Features />
       <Philosophy />
-      <Protocol />
+      <Ebook />
       <Testimonials />
       <Team />
       <Programs />

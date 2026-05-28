@@ -8,7 +8,7 @@ export default {
     extend: {
       colors: {
         obsidian: '#0D0D12',
-        champagne: '#C9A84C',
+        champagne: '#877650',
         ivory: '#FAF8F5',
         slate: '#2A2A35',
       },
