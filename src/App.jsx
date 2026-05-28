@@ -8,21 +8,10 @@ import {
 } from 'lucide-react'
 import CtaLink from './components/CtaLink'
 import Navbar from './components/Navbar'
+import TrustLogoMarquee from './components/TrustLogoMarquee'
 import { T, CTA_URL, CTA_LABEL } from './theme'
 
 gsap.registerPlugin(ScrollTrigger)
-
-const CLIENT_LOGOS = [
-  { name: 'Würth', src: '/logos/wuerth.svg' },
-  { name: 'TDK', src: '/logos/tdk.svg' },
-  { name: 'PLANSEE', src: '/logos/plansee.png' },
-  { name: 'Christ Electronic Systems', src: '/logos/christ.svg' },
-  { name: 'Webasto', src: '/logos/webasto.svg' },
-  { name: 'Zollner Elektronik', src: '/logos/zollner.svg' },
-  { name: 'BMK Group', src: '/logos/bmk.png' },
-  { name: 'acal bfi', src: '/logos/acal-bfi.svg' },
-  { name: 'Spang Engineered Solutions', src: '/logos/spang.svg' },
-]
 
 /* ─────────────────────────────────────────────────────────────────────────────
    HERO
@@ -120,26 +109,9 @@ function Hero() {
             />
           </div>
         </div>
-
-        <div className="hidden md:block w-full mt-16 lg:mt-20 mb-16 lg:mb-20 py-6 lg:py-7">
-          <div className="flex w-full min-w-0 flex-nowrap items-center justify-between gap-x-2 lg:gap-x-3">
-            {CLIENT_LOGOS.map((logo) => (
-              <img
-                key={logo.name}
-                src={logo.src}
-                alt={logo.name}
-                title={logo.name}
-                className={`trust-logo h-[42px] lg:h-12 w-auto object-contain object-center shrink-0 ${
-                  logo.name === 'Würth' ? 'max-w-[150px] lg:max-w-[165px]' :
-                  logo.name === 'PLANSEE' ? 'max-w-[138px] lg:max-w-[150px]' :
-                  logo.name === 'Christ Electronic Systems' ? 'max-w-[132px] lg:max-w-[144px]' :
-                  'max-w-[102px] lg:max-w-[114px]'
-                }`}
-              />
-            ))}
-          </div>
-        </div>
       </div>
+
+      <TrustLogoMarquee className="hidden md:block relative z-10 mt-16 lg:mt-20 mb-16 lg:mb-20 py-6 lg:py-8" />
     </section>
   )
 }
@@ -405,9 +377,17 @@ function Philosophy() {
       style={{ background: T.slate }}
     >
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-10"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url('/stephan_anzug.jpg')`,
+          backgroundPosition: 'center 20%',
+          opacity: 0.38,
+        }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `linear-gradient(105deg, ${T.slate}E8 0%, ${T.slate}A8 45%, ${T.slate}70 100%)`,
         }}
       />
       <div ref={textRef} className="relative z-10 max-w-5xl mx-auto">
@@ -866,8 +846,6 @@ function Programs() {
                 background: p.featured ? T.obsidian : T.champagne,
                 color: p.featured ? T.ivory : T.obsidian,
               }}
-              btnBgClassName="rounded-2xl"
-              bgHover={p.featured ? T.slate : '#9d8a65'}
               iconSize={14}
             >
               Jetzt starten

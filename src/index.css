@@ -56,14 +56,14 @@ body {
 .btn-magnetic:hover {
   transform: scale(1.03);
 }
-.btn-magnetic .btn-bg {
-  position: absolute;
-  inset: 0;
-  transform: translateY(100%);
-  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+.btn-magnetic.btn-primary {
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    filter 0.25s ease;
 }
-.btn-magnetic:hover .btn-bg {
-  transform: translateY(0);
+.btn-magnetic.btn-primary:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 8px 28px rgba(242, 204, 112, 0.28);
 }
 
 /* ── Secondary button — gold border, transparent fill, white text ─────────── */
@@ -78,10 +78,6 @@ body {
   border-color: #9d8a65;
   color: #faf8f5;
 }
-.btn-secondary .btn-bg {
-  display: none;
-}
-
 /* ── Link hover lift ────────────────────────────────────────────────────────── */
 .link-lift {
   transition: transform 0.2s ease, color 0.2s ease;
@@ -173,6 +169,101 @@ body {
 .trust-logo:hover {
   opacity: 1;
   filter: grayscale(100%) brightness(1.65) contrast(1.05);
+}
+
+.trust-logo-bright {
+  filter: grayscale(100%) brightness(1.85) contrast(1.05);
+  opacity: 0.92;
+}
+
+.trust-logo-bright:hover {
+  filter: grayscale(100%) brightness(2) contrast(1.08);
+  opacity: 1;
+}
+
+.trust-logo-tall {
+  height: 2.75rem;
+}
+
+@media (min-width: 1024px) {
+  .trust-logo-tall {
+    height: 3.25rem;
+  }
+}
+
+/* ── Hero logo marquee (full-width infinite scroll) ─────────────────────── */
+.logo-marquee {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 6%,
+    #000 94%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 6%,
+    #000 94%,
+    transparent 100%
+  );
+}
+
+.logo-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: logo-marquee 180s linear infinite;
+}
+
+.logo-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.logo-marquee-group {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 3.5rem;
+  padding-right: 3.5rem;
+}
+
+@media (min-width: 1024px) {
+  .logo-marquee-group {
+    gap: 5rem;
+    padding-right: 5rem;
+  }
+}
+
+@keyframes logo-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-marquee-track {
+    animation: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    gap: 2rem;
+    padding: 0 1.5rem;
+  }
+
+  .logo-marquee-group {
+    padding-right: 0;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .logo-marquee-group:last-child {
+    display: none;
+  }
 }
 
 /* ── Case study card logos (bottom-right) ─────────────────────────────────── */

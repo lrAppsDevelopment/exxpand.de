@@ -7,8 +7,6 @@ export default function CtaLink({
   variant = 'primary',
   iconSize = 14,
   children = CTA_LABEL,
-  bgHover = '#9d8a65',
-  btnBgClassName = 'rounded-full',
   onClick,
 }) {
   const isSecondary = variant === 'secondary'
@@ -19,13 +17,10 @@ export default function CtaLink({
       rel="noopener noreferrer"
       onClick={onClick}
       className={`btn-magnetic inline-flex items-center gap-2 ${
-        isSecondary ? 'btn-secondary' : ''
+        isSecondary ? 'btn-secondary' : 'btn-primary'
       } ${className}`}
       style={isSecondary ? undefined : style}
     >
-      {!isSecondary && (
-        <span className={`btn-bg ${btnBgClassName}`} style={{ backgroundColor: bgHover }} />
-      )}
       <span className="relative z-10">{children}</span>
       <ArrowRight size={iconSize} className="relative z-10 shrink-0" />
     </a>
