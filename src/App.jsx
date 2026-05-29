@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import {
-  ArrowRight, Zap, TrendingUp, Users, Star,
-  Calendar, CheckCircle
+  ArrowRight, Star,
+  CheckCircle
 } from 'lucide-react'
 import CtaLink from './components/CtaLink'
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 import TrustLogoMarquee from './components/TrustLogoMarquee'
 import { T, CTA_URL, CTA_LABEL } from './theme'
 
@@ -46,7 +47,7 @@ function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-[100dvh] flex flex-col justify-end pb-20 md:pb-0"
+      className="relative min-h-[100dvh] flex flex-col"
     >
       {/* Background image */}
       <div
@@ -70,8 +71,11 @@ function Hero() {
         }}
       />
 
-      {/* Content + trust logos — same horizontal padding as all sections */}
-      <div className="relative z-10 w-full px-6 md:px-16 lg:px-24">
+      {/* Reserve space for fixed navbar */}
+      <div className="h-28 md:h-36 lg:h-40 shrink-0" aria-hidden="true" />
+
+      {/* Content — bottom-aligned in remaining viewport */}
+      <div className="relative z-10 flex flex-1 flex-col justify-end w-full px-6 md:px-16 lg:px-24 pb-10 md:pb-5">
         <div className="max-w-4xl">
           <div ref={headlineRef}>
             <p className="font-mono text-sm tracking-[0.25em] uppercase mb-4" style={{ color: T.champagne }}>
@@ -81,7 +85,7 @@ function Hero() {
               Wachstum trifft
             </h1>
             <h1
-              className="font-serif italic font-black leading-none mb-6"
+              className="font-serif italic font-black leading-none mb-8 md:mb-10"
               style={{
                 fontSize: 'clamp(4rem, 12vw, 10rem)',
                 color: T.champagne,
@@ -94,9 +98,10 @@ function Hero() {
 
           <p
             ref={subRef}
-            className="text-lg md:text-xl text-ivory/70 max-w-xl leading-relaxed mb-10"
+            className="text-lg md:text-xl text-ivory/70 max-w-xl leading-relaxed mt-4 md:mt-6 mb-12 md:mb-14"
           >
             Mit EXXPAND erreichen Sie in 6 Monaten mehr als Ihre Wettbewerber in 5 Jahren.
+            <br />
             <br />
             Persönlich. Messbar. Unaufhaltsam.
           </p>
@@ -111,191 +116,197 @@ function Hero() {
         </div>
       </div>
 
-      <TrustLogoMarquee className="hidden md:block relative z-10 mt-16 lg:mt-20 mb-16 lg:mb-20 py-6 lg:py-8" />
+      <TrustLogoMarquee className="hidden md:block relative z-10 mt-8 lg:mt-10 mb-16 lg:mb-20 py-6 lg:py-8" />
     </section>
   )
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   FEATURE CARD 1 — Diagnostic Shuffler (Masterplan & Umsetzung)
+   FEATURE CARD 1 — Effizienz (conversion rate animation)
 ───────────────────────────────────────────────────────────────────────────── */
-function ShufflerCard() {
-  const items = [
-    { label: 'Vision & Mission klar', sub: 'Glasklares Leitbild definiert' },
-    { label: 'Engpässe aufgelöst', sub: 'Hindernisse systematisch eliminiert' },
-    { label: 'Gipfel erreicht', sub: '6 Monate statt 5 Jahre' },
-  ]
-  const [stack, setStack] = useState(items)
+function EffizienzCard() {
+  const chartRef = useRef(null)
+  const [closeRate, setCloseRate] = useState(30)
 
   useEffect(() => {
-    const id = setInterval(() => {
-      setStack(prev => {
-        const next = [...prev]
-        next.unshift(next.pop())
-        return next
+    const ctx = gsap.context(() => {
+      const ticker = { value: 30 }
+      gsap.to(ticker, {
+        value: 60,
+        duration: 2,
+        ease: 'power2.inOut',
+        repeat: -1,
+        yoyo: true,
+        repeatDelay: 0.8,
+        onUpdate: () => setCloseRate(Math.round(ticker.value)),
       })
-    }, 3000)
-    return () => clearInterval(id)
+    }, chartRef)
+    return () => ctx.revert()
   }, [])
 
   return (
-    <div className="rounded-4xl p-8 flex flex-col gap-6 border h-full"
-      style={{ background: T.ivory, borderColor: `${T.slate}30` }}>
-      <div className="flex items-center justify-between">
-        <span className="font-sans font-bold text-lg" style={{ color: T.obsidian }}>Masterplan & Umsetzung</span>
-        <Zap size={18} style={{ color: T.champagne }} />
-      </div>
-      <p className="text-sm" style={{ color: `${T.slate}99` }}>
-        Konkrete Anleitung zur aktiven Ziel-Umsetzung — für Sie, Ihr Unternehmen und Ihr Team.
+    <div
+      className="rounded-4xl p-8 flex flex-col gap-5 border h-full"
+      style={{ background: T.ivory, borderColor: `${T.slate}30` }}
+    >
+      <h3 className="font-sans font-bold text-base leading-snug" style={{ color: T.obsidian }}>
+        Mehr Abschlussquote statt teurerer Leads.
+      </h3>
+      <p className="text-sm leading-relaxed" style={{ color: `${T.slate}99` }}>
+        Die meisten Unternehmen verbrennen Budget für immer neue Kontakte. Wir machen es anders:
+        Wir optimieren den bestehenden Vertriebsprozess so, dass sich die Abschlussquote Ihrer
+        vorhandenen Leads um 30&nbsp;% bis 100&nbsp;% erhöht. Mehr Umsatz aus dem gleichen Marktpotenzial.
       </p>
-      <div className="relative h-44 flex flex-col justify-end gap-2">
-        {stack.map((item, i) => (
-          <div
-            key={item.label}
-            className="card-enter absolute w-full rounded-3xl p-4 border flex justify-between items-center"
-            style={{
-              bottom: `${i * 14}px`,
-              zIndex: stack.length - i,
-              background: i === 0 ? T.obsidian : T.ivory,
-              borderColor: i === 0 ? T.champagne : `${T.slate}25`,
-              transform: `scale(${1 - i * 0.04}) translateY(0)`,
-              transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-              opacity: 1 - i * 0.25,
-            }}
-          >
-            <div>
-              <p className="font-semibold text-sm"
-                style={{ color: i === 0 ? T.ivory : T.obsidian }}>{item.label}</p>
-              <p className="text-xs mt-0.5"
-                style={{ color: i === 0 ? `${T.ivory}80` : `${T.slate}80` }}>{item.sub}</p>
-            </div>
-            {i === 0 && <CheckCircle size={18} style={{ color: T.champagne }} />}
+      <div
+        ref={chartRef}
+        className="rounded-2xl p-5 border mt-auto"
+        style={{ background: T.obsidian, borderColor: `${T.slate}` }}
+      >
+        <div>
+          <div className="h-3 rounded-full overflow-hidden" style={{ background: `${T.slate}` }}>
+            <div
+              className="h-full rounded-full"
+              style={{ width: `${closeRate}%`, background: T.champagne }}
+            />
           </div>
-        ))}
+          <div className="flex justify-between items-center mt-2">
+            <span className="font-mono text-xs" style={{ color: `${T.ivory}50` }}>Abschlussrate</span>
+            <span className="font-mono text-xs font-semibold" style={{ color: T.champagne }}>
+              {closeRate}%
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   )
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   FEATURE CARD 2 — Telemetry Typewriter (Umsatz & Wachstum)
+   FEATURE CARD 2 — Hardware- & Elektronik-DNA
 ───────────────────────────────────────────────────────────────────────────── */
-function TypewriterCard() {
-  const messages = [
-    '> Umsatz +25–40 % in 12 Monaten',
-    '> Rohertrag um 10–15 % gehoben',
-    '> High Probability Selling aktiv',
-    '> Positionierung als Marktführer',
-    '> 100 % tägliche Zielkontrolle',
-    '> Produktportfolio optimiert',
-  ]
+const DNA_TAGS = ['B2B', 'Elektronik', 'Hardware', 'Mittelstand']
+
+function HardwareDnaCard() {
   const [displayed, setDisplayed] = useState('')
-  const [msgIdx, setMsgIdx] = useState(0)
+  const [tagIdx, setTagIdx] = useState(0)
   const [charIdx, setCharIdx] = useState(0)
 
   useEffect(() => {
-    const msg = messages[msgIdx]
-    if (charIdx < msg.length) {
+    const tag = DNA_TAGS[tagIdx]
+    if (charIdx < tag.length) {
       const t = setTimeout(() => {
-        setDisplayed(msg.slice(0, charIdx + 1))
+        setDisplayed(tag.slice(0, charIdx + 1))
         setCharIdx(c => c + 1)
-      }, 45)
+      }, 55)
       return () => clearTimeout(t)
     } else {
       const t = setTimeout(() => {
-        setMsgIdx(i => (i + 1) % messages.length)
+        setTagIdx(i => (i + 1) % DNA_TAGS.length)
         setCharIdx(0)
         setDisplayed('')
-      }, 1800)
+      }, 1600)
       return () => clearTimeout(t)
     }
-  }, [charIdx, msgIdx])
+  }, [charIdx, tagIdx])
 
   return (
-    <div className="rounded-4xl p-8 flex flex-col gap-6 border h-full"
-      style={{ background: T.obsidian, borderColor: `${T.slate}` }}>
-      <div className="flex items-center justify-between">
-        <span className="font-sans font-bold text-lg" style={{ color: T.ivory }}>Umsatz & Wachstum</span>
-        <TrendingUp size={18} style={{ color: T.champagne }} />
-      </div>
-      <p className="text-sm" style={{ color: `${T.ivory}60` }}>
-        Umsatz +25–40 % · Rohertrag +10–15 % · High Performance Vertrieb — in 12 Monaten.
-      </p>
-      <div className="flex items-center gap-2 mb-2">
-        <div className="w-2 h-2 rounded-full pulse-dot" style={{ background: '#4ade80' }} />
-        <span className="font-mono text-xs" style={{ color: '#4ade80' }}>LIVE FEED</span>
-      </div>
-      <div
-        className="flex-1 rounded-2xl p-4 font-mono text-sm min-h-[120px]"
-        style={{ background: `${T.slate}60`, color: T.champagne }}
+    <div
+      className="relative overflow-hidden rounded-4xl p-8 flex flex-col gap-5 border h-full"
+      style={{ background: T.obsidian, borderColor: `${T.slate}` }}
+    >
+      <svg
+        className="pointer-events-none absolute inset-0 w-full h-full opacity-[0.12]"
+        aria-hidden="true"
+        viewBox="0 0 400 320"
+        preserveAspectRatio="xMidYMid slice"
       >
-        <p className="leading-relaxed">
-          {displayed}
-          <span className="cursor-blink ml-0.5" style={{ color: T.champagne }}>█</span>
-        </p>
+        <g stroke={T.champagne} strokeWidth="1" fill="none">
+          <rect x="40" y="40" width="120" height="80" rx="4" />
+          <rect x="200" y="60" width="160" height="100" rx="4" />
+          <path d="M160 80 L200 110" />
+          <path d="M120 120 L200 160" />
+          <circle cx="80" cy="200" r="28" />
+          <circle cx="280" cy="220" r="36" />
+          <path d="M108 200 L180 240 L260 220" />
+          <path d="M60 260 H340" strokeDasharray="6 4" />
+          {[0, 1, 2, 3, 4].map((i) => (
+            <line key={i} x1={70 + i * 55} y1="260" x2={90 + i * 55} y2="290" />
+          ))}
+        </g>
+      </svg>
+
+      <h3 className="relative font-sans font-bold text-base leading-snug" style={{ color: T.ivory }}>
+        Branchen-Expertise auf Augenhöhe.
+      </h3>
+      <p className="relative text-sm leading-relaxed" style={{ color: `${T.ivory}65` }}>
+        Kein theoretisches Verkaufs-Blabla von generischen Coaches. Wir bringen über 30 Jahre
+        echte Praxiserfahrung aus der Elektronik- und Hardware-Industrie mit. Und wir verstehen hochkomplexe,
+        erklärungsbedürftige B2B-Produkte und sprechen exakt die Sprache Ihres Mittelstands.
+      </p>
+      <div
+        className="relative mt-auto rounded-2xl px-4 py-3 border font-mono text-xs"
+        style={{ background: `${T.slate}50`, borderColor: `${T.champagne}35`, color: T.champagne }}
+      >
+        {displayed}
+        <span className="cursor-blink ml-0.5" style={{ color: T.champagne }}>█</span>
       </div>
     </div>
   )
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   FEATURE CARD 3 — Scheduler (Potenzial & Teamkultur)
+   FEATURE CARD 3 — 5-Stufen-Umsetzungsgarantie
 ───────────────────────────────────────────────────────────────────────────── */
-function SchedulerCard() {
-  const days = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
-  const [activeDay, setActiveDay] = useState(2)
-  const [cursorPos, setCursorPos] = useState(0)
+const FIVE_STAGES = [
+  { step: 1, label: 'Analyse' },
+  { step: 2, label: 'Strategie' },
+  { step: 3, label: 'Integration' },
+  { step: 4, label: 'Zielkontrolle' },
+  { step: 5, label: 'Return on Invest' },
+]
+
+function FiveStagesCard() {
+  const [currentIndex, setCurrentIndex] = useState(0)
 
   useEffect(() => {
-    let step = 0
     const id = setInterval(() => {
-      step = (step + 1) % days.length
-      setCursorPos(step)
-      setActiveDay(step)
-    }, 900)
+      setCurrentIndex(prev => (prev + 1) % FIVE_STAGES.length)
+    }, 2800)
     return () => clearInterval(id)
   }, [])
 
+  const { step, label } = FIVE_STAGES[currentIndex]
+
   return (
-    <div className="rounded-4xl p-8 flex flex-col gap-6 border h-full"
-      style={{ background: T.ivory, borderColor: `${T.slate}30` }}>
-      <div className="flex items-center justify-between">
-        <span className="font-sans font-bold text-lg" style={{ color: T.obsidian }}>Potenzial & Teamkultur</span>
-        <Users size={18} style={{ color: T.champagne }} />
-      </div>
-      <p className="text-sm" style={{ color: `${T.slate}99` }}>
-        Einzigartige Unternehmenskultur aufbauen. Mitarbeiter binden. Volles Potenzial entfalten.
+    <div
+      className="rounded-4xl p-8 flex flex-col gap-5 border h-full"
+      style={{ background: T.ivory, borderColor: `${T.slate}30` }}
+    >
+      <h3 className="font-sans font-bold text-base leading-snug" style={{ color: T.obsidian }}>
+        Ein praxiserprobtes System, das sofort greift.
+      </h3>
+      <p className="text-sm leading-relaxed" style={{ color: `${T.slate}99` }}>
+        Keine wochenlangen Seminare ohne messbares Ergebnis. Mit unserem strukturierten 5-Stufen-System
+        (inspiriert von den Erfolgsstrategien des Weltmarktführers Würth) integrieren wir optimierte
+        Prozesse direkt in Ihren Vertriebsalltag – inklusive ROI-Rechner und sofortiger Zielkontrolle.
       </p>
-      <div className="rounded-2xl p-5 border" style={{ background: T.obsidian, borderColor: `${T.slate}` }}>
-        <div className="flex items-center gap-1.5 mb-4">
-          <Calendar size={14} style={{ color: T.champagne }} />
-          <span className="font-mono text-xs" style={{ color: `${T.ivory}60` }}>EXXPAND PERFORMANCE TRACKER</span>
-        </div>
-        <div className="grid grid-cols-7 gap-1.5">
-          {days.map((d, i) => (
-            <div
-              key={d}
-              className="flex flex-col items-center gap-1.5 transition-all duration-300"
-              style={{ transform: i === cursorPos ? 'scale(1.15)' : 'scale(1)' }}
-            >
-              <span className="font-mono text-xs" style={{ color: `${T.ivory}50` }}>{d}</span>
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300"
-                style={{
-                  background: i === activeDay ? T.champagne : `${T.slate}80`,
-                  transform: i === cursorPos ? 'scale(0.95)' : 'scale(1)',
-                }}
-              >
-                {i === activeDay && <CheckCircle size={14} style={{ color: T.obsidian }} />}
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="relative min-h-[3.5rem] mt-auto overflow-visible">
         <div
-          className="mt-4 rounded-lg px-4 py-2 text-center font-mono text-xs transition-all duration-300"
-          style={{ background: `${T.champagne}25`, color: T.champagne, border: `1px solid ${T.champagne}40` }}
+          key={currentIndex}
+          className="card-enter absolute inset-x-0 bottom-0 rounded-xl px-3.5 py-3 border flex items-center justify-between gap-2 min-w-0"
+          style={{
+            background: T.slate,
+            borderColor: T.champagne,
+            boxShadow: `0 4px 18px ${T.champagne}25`,
+          }}
         >
-          Potenzial voll ausgeschöpft · Gipfel erreicht
+          <p
+            className="font-mono text-[11px] font-semibold truncate min-w-0"
+            style={{ color: T.champagne }}
+          >
+            Schritt {step} · {label}
+          </p>
+          <CheckCircle size={15} className="shrink-0" style={{ color: T.champagne }} />
         </div>
       </div>
     </div>
@@ -329,20 +340,20 @@ function Features() {
   }, [])
 
   return (
-    <section id="features" ref={ref} className="pt-0 pb-28 px-6 md:px-16 lg:px-24">
+    <section id="features" ref={ref} className="pt-20 md:pt-28 pb-28 px-6 md:px-16 lg:px-24">
       <div className="feature-header max-w-2xl mb-16">
         <p className="font-mono text-xs tracking-[0.3em] uppercase mb-4" style={{ color: T.champagne }}>
           Was wir bieten
         </p>
         <h2 className="font-sans font-black text-4xl md:text-5xl leading-tight text-ivory">
-          Drei Dimensionen.<br />
-          <span className="font-serif italic" style={{ color: T.champagne }}>Ein Gipfel.</span>
+          Unser Ansatz.<br />
+          <span className="font-serif italic" style={{ color: T.champagne }}>Ihr Vorsprung.</span>
         </h2>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="feature-card"><ShufflerCard /></div>
-        <div className="feature-card"><TypewriterCard /></div>
-        <div className="feature-card"><SchedulerCard /></div>
+        <div className="feature-card"><EffizienzCard /></div>
+        <div className="feature-card"><HardwareDnaCard /></div>
+        <div className="feature-card"><FiveStagesCard /></div>
       </div>
     </section>
   )
@@ -404,7 +415,7 @@ function Philosophy() {
           ))}
         </p>
         <p className="text-2xl md:text-3xl font-semibold text-ivory/70 mb-6">
-          {['Wir', 'fokussieren', 'uns', 'auf:'].map((w, i) => (
+          {['Wir', 'fokussieren', 'uns', 'auf', 'exakt', 'eine', 'Sache:'].map((w, i) => (
             <span key={i} className="word-reveal inline-block mr-3">{w}</span>
           ))}
         </p>
@@ -416,7 +427,7 @@ function Philosophy() {
               color: T.champagne,
             }}
           >
-            100 % Umsetzung.
+            Ergebnisse
           </p>
         </div>
         <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -586,7 +597,7 @@ function Testimonials() {
           >
             <div className="flex gap-1" aria-label="5 von 5 Sternen">
               {Array.from({ length: 5 }).map((_, starIndex) => (
-                <Star key={starIndex} size={20} style={{ color: T.champagne }} />
+                <Star key={starIndex} size={20} fill={T.champagne} stroke={T.champagne} style={{ color: T.champagne }} />
               ))}
             </div>
             <p className="text-ivory/80 text-sm leading-relaxed italic flex-1">&ldquo;{t.quote}&rdquo;</p>
@@ -679,7 +690,7 @@ function Team() {
   )
 
   return (
-    <section ref={ref} className="py-28" style={{ background: `${T.slate}60` }}>
+    <section id="ueber-uns" ref={ref} className="py-28" style={{ background: `${T.slate}60` }}>
       <div className="max-w-2xl mb-16 mx-auto text-center px-6 md:px-16 lg:px-24">
         <p className="font-mono text-xs tracking-[0.3em] uppercase mb-4" style={{ color: T.champagne }}>
           Die Gipfelstürmer
@@ -854,76 +865,6 @@ function Programs() {
         ))}
       </div>
     </section>
-  )
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   FOOTER
-───────────────────────────────────────────────────────────────────────────── */
-function Footer() {
-  const navGroups = [
-    {
-      heading: 'Programme',
-      links: ['EXXPAND Masterplan', 'EXXPAND Sales', 'EXXPAND Strategy'],
-    },
-    {
-      heading: 'Unternehmen',
-      links: ['Über uns', 'Referenzen', 'Blog', 'Newsroom'],
-    },
-    {
-      heading: 'Ressourcen',
-      links: ['Gratis-Ebook', 'Presseartikel', 'Newsletter', 'FAQ'],
-    },
-  ]
-
-  return (
-    <footer
-      className="rounded-t-[4rem] pt-16 pb-10 px-6 md:px-16 lg:px-24"
-      style={{ background: T.obsidian, borderTop: `1px solid ${T.slate}` }}
-    >
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-        <div>
-          <p className="font-black text-2xl tracking-tighter mb-4">
-            EXX<span style={{ color: T.champagne }}>PAND</span>
-          </p>
-          <p className="text-ivory/50 text-sm leading-relaxed max-w-xs">
-            Top Performance Akademie für Unternehmer und Führungskräfte. EXX-fach schneller nach oben.
-          </p>
-        </div>
-        {navGroups.map(g => (
-          <div key={g.heading}>
-            <p className="font-mono text-xs tracking-widest uppercase mb-5" style={{ color: T.champagne }}>
-              {g.heading}
-            </p>
-            <ul className="flex flex-col gap-3">
-              {g.links.map(l => (
-                <li key={l}>
-                  <a href="#" className="link-lift text-sm text-ivory/50 hover:text-ivory transition-colors">
-                    {l}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-
-      <div
-        className="flex flex-col md:flex-row items-center justify-between pt-8 gap-4"
-        style={{ borderTop: `1px solid ${T.slate}60` }}
-      >
-        <p className="font-mono text-xs text-ivory/30">
-          © {new Date().getFullYear()} EXXPAND.DE — Alle Rechte vorbehalten.
-        </p>
-        <div className="flex items-center gap-6">
-          {['Impressum', 'Datenschutz', 'Newsletter'].map(l => (
-            <a key={l} href="#" className="link-lift font-mono text-xs text-ivory/30 hover:text-ivory/60 transition-colors">
-              {l}
-            </a>
-          ))}
-        </div>
-      </div>
-    </footer>
   )
 }
 

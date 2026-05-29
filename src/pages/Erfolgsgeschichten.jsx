@@ -20,7 +20,7 @@ function StoryCard({ story, index }) {
     >
       <div className="flex gap-1" aria-label="5 von 5 Sternen">
         {Array.from({ length: 5 }).map((_, i) => (
-          <Star key={i} size={18} style={{ color: T.champagne }} />
+          <Star key={i} size={18} fill={T.champagne} stroke={T.champagne} style={{ color: T.champagne }} />
         ))}
       </div>
 

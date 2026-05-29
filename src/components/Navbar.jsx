@@ -12,10 +12,10 @@ import CtaLink from './CtaLink'
 import { T } from '../theme'
 
 const NAV_LINKS = [
-  { label: 'Leistungen', href: '#features' },
   { label: 'Philosophie', href: '#philosophy' },
-  { label: 'E-Book', href: '#ebook' },
   { label: 'Referenzen', href: '#testimonials' },
+  { label: 'Über uns', href: '#ueber-uns' },
+  { label: 'Leistungen', href: '#features' },
 ]
 
 const linkClass =

@@ -54,6 +54,56 @@ def process_nzz():
     print('neue_zeitung', img.size)
 
 
+def process_o2():
+    """Blue O2 on checkerboard/white matte → white on transparent."""
+    path = os.path.join(BASE, 'o2.png')
+    img = Image.open(path).convert('RGBA')
+    px = img.load()
+    w, h = img.size
+
+    def is_background(r, g, b):
+        sat = max(r, g, b) - min(r, g, b)
+        lum = 0.299 * r + 0.587 * g + 0.114 * b
+        if lum >= 210 and sat <= 30:
+            return True
+        if r >= 218 and g >= 218 and b >= 218 and sat <= 20:
+            return True
+        return False
+
+    def is_logo_blue(r, g, b):
+        return b > r + 8 and b > g + 5 and b >= 35
+
+    for y in range(h):
+        for x in range(w):
+            r, g, b, a = px[x, y]
+            if is_background(r, g, b):
+                px[x, y] = (0, 0, 0, 0)
+                continue
+            if is_logo_blue(r, g, b):
+                strength = min(255, int((b / 110.0) * 255))
+                strength = max(strength, int(255 - (r + g) / 2))
+                strength = min(255, max(64, strength))
+                px[x, y] = (255, 255, 255, strength)
+                continue
+            sat = max(r, g, b) - min(r, g, b)
+            lum = 0.299 * r + 0.587 * g + 0.114 * b
+            if sat <= 40 and b >= r and lum < 210:
+                t = min(255, int(b * 2.2))
+                px[x, y] = (255, 255, 255, t)
+            else:
+                px[x, y] = (0, 0, 0, 0)
+
+    bbox = img.getbbox()
+    if bbox:
+        pad = 6
+        img = img.crop((
+            max(0, bbox[0] - pad), max(0, bbox[1] - pad),
+            min(w, bbox[2] + pad), min(h, bbox[3] + pad),
+        ))
+    img.save(path, optimize=True)
+    print('o2', img.size)
+
+
 def lighten_svg(fname, subs):
     path = os.path.join(BASE, fname)
     text = open(path, encoding='utf-8', errors='ignore').read()
@@ -78,6 +128,7 @@ def lighten_svg(fname, subs):
 if __name__ == '__main__':
     process_db()
     process_nzz()
+    process_o2()
     lighten_svg('webasto.svg', {'#333399': '#e8e8e8', '#ed1c24': '#f0f0f0'})
     lighten_svg('zollner.svg', {'#003E74': '#d5dbe1'})
     lighten_svg('acal-bfi.svg', {'#009DDB': '#d8d8d8', '#003E74': '#d5dbe1'})

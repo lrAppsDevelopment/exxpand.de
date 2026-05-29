@@ -1,36 +1,22 @@
-import { CLIENT_LOGOS, trustLogoClass, trustLogoMaxWidth } from '../data/clientLogos'
-
-function LogoStrip({ ariaHidden = false }) {
-  return (
-    <>
-      {CLIENT_LOGOS.map((logo, i) => (
-        <img
-          key={`${logo.src}-${i}`}
-          src={logo.src}
-          alt={ariaHidden ? '' : logo.name}
-          title={logo.name}
-          aria-hidden={ariaHidden}
-          draggable={false}
-          className={`${trustLogoClass(logo)} ${trustLogoMaxWidth(logo.size, logo.tall)}`}
-        />
-      ))}
-    </>
-  )
-}
+import { HERO_TRUST_LOGOS, trustLogoHeroClass, trustLogoHeroMaxWidth } from '../data/clientLogos'
 
 export default function TrustLogoMarquee({ className = '' }) {
   return (
     <div
-      className={`logo-marquee w-full overflow-hidden ${className}`}
+      className={`w-full px-6 md:px-16 lg:px-24 ${className}`}
       aria-label="Client logos"
     >
-      <div className="logo-marquee-track">
-        <div className="logo-marquee-group">
-          <LogoStrip />
-        </div>
-        <div className="logo-marquee-group" aria-hidden="true">
-          <LogoStrip ariaHidden />
-        </div>
+      <div className="mx-auto flex max-w-4xl min-w-0 items-center justify-center gap-7 lg:max-w-5xl lg:gap-9">
+        {HERO_TRUST_LOGOS.map((logo) => (
+          <img
+            key={logo.src}
+            src={logo.src}
+            alt={logo.name}
+            title={logo.name}
+            draggable={false}
+            className={`${trustLogoHeroClass(logo)} ${trustLogoHeroMaxWidth(logo.size, logo.tall)}`}
+          />
+        ))}
       </div>
     </div>
   )
