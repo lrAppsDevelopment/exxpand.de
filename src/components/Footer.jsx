@@ -27,24 +27,30 @@ export default function Footer() {
       className="rounded-t-[4rem] pt-16 pb-10 px-6 md:px-16 lg:px-24"
       style={{ background: T.obsidian, borderTop: `1px solid ${T.slate}` }}
     >
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-        <div>
-          <p className="font-black text-2xl tracking-tighter mb-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10 sm:gap-8 md:gap-12 mb-16">
+        <div className="min-w-0">
+          <p className="font-black text-xl sm:text-2xl tracking-tighter mb-3 sm:mb-4">
             EXX<span style={{ color: T.champagne }}>PAND</span>
           </p>
-          <p className="text-ivory/50 text-sm leading-relaxed max-w-xs">
+          <p className="text-ivory/50 text-xs sm:text-sm leading-relaxed">
             Top Performance Akademie für Unternehmer und Führungskräfte. EXX-fach schneller nach oben.
           </p>
         </div>
         {navGroups.map(g => (
-          <div key={g.heading}>
-            <p className="font-mono text-xs tracking-widest uppercase mb-5" style={{ color: T.champagne }}>
+          <div key={g.heading} className="min-w-0">
+            <p
+              className="font-mono text-xs tracking-widest uppercase mb-4 sm:mb-5"
+              style={{ color: T.champagne }}
+            >
               {g.heading}
             </p>
-            <ul className="flex flex-col gap-3">
+            <ul className="flex flex-col gap-2 sm:gap-3">
               {g.links.map(l => (
                 <li key={l}>
-                  <a href="#" className="link-lift text-sm text-ivory/50 hover:text-ivory transition-colors">
+                  <a
+                    href="#"
+                    className="link-lift text-xs sm:text-sm text-ivory/50 hover:text-ivory transition-colors leading-snug"
+                  >
                     {l}
                   </a>
                 </li>

@@ -47,7 +47,7 @@ function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-[100dvh] flex flex-col"
+      className="relative flex flex-col md:min-h-[100dvh]"
     >
       {/* Background image */}
       <div
@@ -72,10 +72,10 @@ function Hero() {
       />
 
       {/* Reserve space for fixed navbar */}
-      <div className="h-28 md:h-36 lg:h-40 shrink-0" aria-hidden="true" />
+      <div className="h-20 md:h-36 lg:h-40 shrink-0" aria-hidden="true" />
 
-      {/* Content — bottom-aligned in remaining viewport */}
-      <div className="relative z-10 flex flex-1 flex-col justify-end w-full px-6 md:px-16 lg:px-24 pb-10 md:pb-5">
+      {/* Content — height fits content on mobile; full viewport + bottom align from md */}
+      <div className="relative z-10 w-full px-6 md:px-16 lg:px-24 pt-2 pb-10 md:flex md:flex-1 md:flex-col md:justify-end md:pt-0 md:pb-5">
         <div className="max-w-4xl">
           <div ref={headlineRef}>
             <p className="font-mono text-sm tracking-[0.25em] uppercase mb-4" style={{ color: T.champagne }}>
@@ -150,7 +150,7 @@ function EffizienzCard() {
       style={{ background: T.ivory, borderColor: `${T.slate}30` }}
     >
       <h3 className="font-sans font-bold text-base leading-snug" style={{ color: T.obsidian }}>
-        Mehr Abschlussquote statt teurerer Leads.
+        Abschlussquote erhöhen, anstatt mehr Leads zu kaufen.
       </h3>
       <p className="text-sm leading-relaxed" style={{ color: `${T.slate}99` }}>
         Die meisten Unternehmen verbrennen Budget für immer neue Kontakte. Wir machen es anders:
